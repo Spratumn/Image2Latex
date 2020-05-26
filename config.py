@@ -1,6 +1,7 @@
 class Config:
     # system
     DATA_DIR = 'data'
+    FORMULAS_DIR = 'C:/Users/QIU/Desktop/dataset/image2latex100k/im2latex_formulas.lst'
     LOG_DIR = 'logs'
     CSV_DIR = 'data_list'
     WEIGHTS_DIR = 'logs/weights'
@@ -21,7 +22,7 @@ class Config:
     SEQUENCE_NUM = 5
 
     # dataset
-    # input
+    CROP_SIZE = []
 
 
     # train

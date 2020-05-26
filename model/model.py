@@ -98,7 +98,7 @@ class LatexNet(nn.Module):
             #     self.formulas[i] += (str(token_numpy[i]) + " ")
             token_vector = torch.nn.functional.one_hot(next_token, cfg.INPUT_SIZE_DECODER)
 
-        return self.logits, self.predicts
+        return self.predicts
 
 
 class Encoder(nn.Module):
