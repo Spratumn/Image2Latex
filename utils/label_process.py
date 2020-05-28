@@ -12,8 +12,9 @@ cfg = Config()
 
 class LabelProcess:
 	def __init__(self):
-		self.token2str = {'<f>': 0, '</f>': 1, '<pad>': 2, '<unk>': 3}
-		self.str2token = {0: '<f>', 1: '</f>', 2: '<pad>', 3: '<unk>'}
+		self.str2token = {'<f>': 0, '</f>': 1, '<pad>': 2, '<unk>': 3}
+		self.token2str = {0: '<f>', 1: '</f>', 2: '<pad>', 3: '<unk>',
+						  4: '\dot', 5: '\ddot' }
 
 	def formulas2tensor(self, formulas):
 		"""
@@ -34,8 +35,5 @@ class LabelProcess:
 	def get_token_str_dict(self):
 		with open(cfg.FORMULAS_DIR, 'r', encoding="latin_1") as f:
 			formulas_lines = f.readlines()
-		# for formulas_line in formulas_lines:
-		# 	for s in
-
-
-
+# for formulas_line in formulas_lines:
+# 	for s in

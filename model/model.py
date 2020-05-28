@@ -87,9 +87,9 @@ class LatexNet(nn.Module):
         #     token_numpy = token_start.cpu().numpy()
         #     self.formulas[i] += token_numpy[i]
         #     # formulas[i] += vocab.idx2token[token_numpy[i]]
-
+        (dhn, dcn) = (ehn, ecn)
         for t in range(1, cfg.SEQUENCE_NUM):
-            predict = self.decoder(token_vector, ehn, ecn)
+            predict, (dhn, dcn) = self.decoder(token_vector, dhn, dcn)
             self.logits.append(predict)
             next_token = predict.argmax(dim=1)
             self.predicts.append(next_token)
@@ -118,9 +118,9 @@ class Encoder(nn.Module):
         # seq_features: [batch_size, seq_size, hidden_size], seq_size = down sample w * h
         # import pdb
         # pdb.set_trace()
-        seq_features, (hn, cn) = self.lstm(input_vector, (self.h0, self.c0))
+        seq_features, (ehn, ecn) = self.lstm(input_vector, (self.h0, self.c0))
         # seq_features = seq_features[:, -1, :]
-        return seq_features, (hn, cn)
+        return seq_features, (ehn, ecn)
 
 
 class Decoder(nn.Module):
@@ -129,15 +129,15 @@ class Decoder(nn.Module):
         self.lstm = nn.LSTM(cfg.INPUT_SIZE_DECODER, cfg.HIDDEN_SIZE_DECODER, batch_first=True)
         self.out = nn.Linear(cfg.HIDDEN_SIZE_DECODER, cfg.OUTPUT_SIZE_DECODER, bias=False)
 
-    def forward(self, token_vector, hn, cn):
+    def forward(self, token_vector, dhn, dcn):
         # token_vector: [batch_size, input_size] -> [batch_size, 1, input_size]
         input_vector = token_vector.unsqueeze(1).float()
         # [batch_size, 1, input_size] -> [batch_size, 1, hidden_size]
-        output_vector, (dhn, dcn) = self.lstm(input_vector, (hn, cn))
+        output_vector, (dhn, dcn) = self.lstm(input_vector, (dhn, dcn))
         output_vector = output_vector.squeeze(1)
         # [batch_size, hidden_size] -> [batch_size, output_size]
         output = self.out(output_vector)
-        return output
+        return output, (dhn, dcn)
 
 
 class MergeModel(nn.Module):

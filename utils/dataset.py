@@ -15,7 +15,7 @@ cfg = Config()
 
 
 class LatexDataset(data.Dataset):
-    def __init__(self, csv_file='test.csv'):
+    def __init__(self, csv_file='train.csv'):
         super(LatexDataset, self).__init__()
         # read csv as data index
         self.data_paths = pd.read_csv((cfg.CSV_DIR + '/' + csv_file),
@@ -39,7 +39,7 @@ class LatexDataset(data.Dataset):
         image = self.image_processor.crop_image(image)
         formula_tensor = self.label_processor.formulas2tensor(formula)
 
-        return image, formula_tensor
+        return image, formula
 
 
 

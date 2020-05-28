@@ -54,18 +54,18 @@ def train():
 def model_test():
 	latnet = create_model()
 	img = torch.rand(cfg.BATCH_SIZE, 3, 128, 256)
-	logit, pred = latnet(img)
-	print(logit)
+	pred = latnet(img)
 
 	print(pred)
 
 
 def dataset_test():
+	from utils.formulas_dict import match_formula
 	datst = LatexDataset()
-	img, formula = datst.__getitem__(500)
-	print(formula)
-	plt.imshow(img)
-	plt.show()
+	img, formula = datst.__getitem__(4561)
+	# plt.imshow(img)
+	# plt.show()
+	match_formula(formula)
 
 
 if __name__ == '__main__':
