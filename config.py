@@ -16,19 +16,17 @@ class Config:
     INPUT_SIZE_ENCODER = 256
     HIDDEN_SIZE_ENCODER = 512
     # decoder
-    INPUT_SIZE_DECODER = 128
     HIDDEN_SIZE_DECODER = 512
-    OUTPUT_SIZE_DECODER = 10
-    SEQUENCE_NUM = 5
+    MAX_FORMULA_LENGTH = 512
 
     # dataset
     CROP_SIZE = []
-
+    TOKEN_COUNT = 1157
 
     # train
     LR = 1.0e-5  # learning rate.
     EPOCHS = 10  # total training epochs.
-    BATCH_SIZE = 2
+    BATCH_SIZE = 1
 
     # loss
     HM_WEIGHT = 1  # loss weight for key point heat maps

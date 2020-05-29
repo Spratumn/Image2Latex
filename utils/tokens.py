@@ -1,7 +1,7 @@
 import re
 import numpy as np
 
-tokenstr = [
+tokenlist = [
 			r'\\dot ', r'\\ddot ', r'\\acute ', r'\\grave ', r'\\check ', r'\\breve ', r'\\tilde ',
 			r'\\bar ', r'\\hat ', r'\\widehat ', r'\\vec ',
 			r'\\exp ', r'\\ln ', r'\\lg ', r'\\log ', r'\\sin ', r'\\cos ', r'\\tan ',
@@ -113,7 +113,7 @@ tokenstr = [
 			r'\\nRightarrow ', r'\\Longrightarrow ',
 			r'\\implies ', r'\\Leftarrow ', r'\\nLeftarrow ',
 			r'\\Longleftarrow ', r'\\Leftrightarrow ', r'\\nLeftrightarrow ', r'\\Longleftrightarrow ', r'\\iff ',
-			 r'\\Uparrow ',
+			r'\\Uparrow ',
 			r'\\Downarrow ', r'\\Updownarrow ',
 			r'\\to ', r'\\nrightarrow ', r'\\longrightarrow ', r'\\leftarrow ', r'\\gets ', r'\\nleftarrow ',
 			r'\\longleftarrow ', r'\\leftrightarrow ', r'\\nleftrightarrow ',
@@ -121,17 +121,17 @@ tokenstr = [
 			r'\\nwarrow ', r'\\searrow ', r'\\mapsto ',
 			r'\\longmapsto ', r'\\rightharpoonup ', r'\\rightharpoondown ', r'\\leftharpoonup ', r'\\leftharpoondown ',
 			r'\\upharpoonleft ', r'\\upharpoonright ', r'\\downharpoonleft ', r'\\downharpoonright ',
-			 r'\\rightleftharpoons ', r'\\leftrightharpoons ',
+			r'\\rightleftharpoons ', r'\\leftrightharpoons ',
 			r'\\curvearrowleft ', r'\\circlearrowleft ', r'\\Lsh ', r'\\upuparrows ', r'\\rightrightarrows ',
-			 r'\\rightleftarrows ', r'\\rightarrowtail ', r'\\looparrowright ',
+			r'\\rightleftarrows ', r'\\rightarrowtail ', r'\\looparrowright ',
 			r'\\curvearrowright ', r'\\circlearrowright ', r'\\Rsh ', r'\\downdownarrows ', r'\\leftleftarrows ',
-			 r'\\leftrightarrows ', r'\\leftarrowtail ', r'\\looparrowleft ',
+			r'\\leftrightarrows ', r'\\leftarrowtail ', r'\\looparrowleft ',
 			r'\\hookrightarrow ', r'\\hookleftarrow ', r'\\multimap ', r'\\leftrightsquigarrow ', r'\\rightsquigarrow ',
-			 r'\\twoheadrightarrow ', r'\\twoheadleftarrow ', r'\\varepsilon ', r'\\varepsilon\right ',
+			r'\\twoheadrightarrow ', r'\\twoheadleftarrow ', r'\\varepsilon ', r'\\varepsilon\right ',
 			r'\\amalg ', r'\\% ', r'\\dagger ', r'\\ddagger ', r'\\ldots ', r'\\cdots ',
 			r'\\smile ', r'\\frown ', r'\\wr ', r'\\triangleleft ', r'\\triangleright ',
 			r'\\diamondsuit ', r'\\heartsuit ', r'\\clubsuit ', r'\\spadesuit ', r'\\Game ', r'\\flat ', r'\\natural ',
-			 r'\\sharp ',
+			r'\\sharp ',
 			r'\\diagup ', r'\\diagdown ', r'\\centerdot ', r'\\ltimes ', r'\\rtimes ', r'\\leftthreetimes ',
 			r'\\rightthreetimes ',
 			r'\\eqcirc ', r'\\circeq ', r'\\triangleq ', r'\\bumpeq ', r'\\Bumpeq ', r'\\risingdotseq ',
@@ -140,7 +140,7 @@ tokenstr = [
 			r'\\vartriangleleft ', r'\\ntriangleleft ', r'\\vartriangleright ', r'\\ntriangleright ', r'\\right ', r'\\left ',
 			r'\\trianglelefteq ', r'\\ntrianglelefteq ', r'\\trianglerighteq ', r'\\ntrianglerighteq ',
 			r'\^', r'_', r'\\overleftarrow ', r'\\overrightarrow ', r'\\overleftrightarrow ', r'\\overset{\\frown}',
-			 r'\\overbrace ',
+			r'\\overbrace ',
 			r'\\begin{matrix}', r'\\end{matrix}', r'\\underbrace ', r'\\ ', r'\\prod ', r'\\coprod ', r'\\int ', r'\\int',
 			r'\\iiint ', r'\\iiiint ',  r'\\iint ', r'\\oint ', r'\\tfrac ', r'\\dfrac ', r'\\dbinom ', r'\\over ',
 			r'\\choose ', r'\\tbinom ', r'\\binom ', r'\\begin{vmatrix}',
@@ -166,10 +166,10 @@ tokenstr = [
 			r'\\models', r'\\Vvdash', r'\\nvdash', r'\\nVdash', r'\\nvDash', r'\\nVDas',
 			r'\\ulcorner', r'\\urcorner', r'\\llcorner',
 			r'\\lrcorner',
-			 r'\\Rrightarrow', r'\\Lleftarrow', r'\\nRightarrow', r'\\Longrightarrow',
+			r'\\Rrightarrow', r'\\Lleftarrow', r'\\nRightarrow', r'\\Longrightarrow',
 			r'\\implies', r'\\Leftarrow', r'\\nLeftarrow',
 			r'\\Longleftarrow', r'\\Leftrightarrow', r'\\nLeftrightarrow', r'\\Longleftrightarrow', r'\\iff',
-			 r'\\Uparrow',
+			r'\\Uparrow',
 			r'\\Downarrow', r'\\Updownarrow',
 			r'\\to', r'\\nrightarrow', r'\\longrightarrow', r'\\leftarrow', r'\\gets', r'\\nleftarrow',
 			r'\\longleftarrow', r'\\leftrightarrow', r'\\nleftrightarrow',
@@ -177,17 +177,17 @@ tokenstr = [
 			r'\\nwarrow', r'\\searrow', r'\\mapsto',
 			r'\\longmapsto', r'\\rightharpoonup', r'\\rightharpoondown', r'\\leftharpoonup', r'\\leftharpoondown',
 			r'\\upharpoonleft', r'\\upharpoonright', r'\\downharpoonleft', r'\\downharpoonright',
-			 r'\\rightleftharpoons', r'\\leftrightharpoons',
+			r'\\rightleftharpoons', r'\\leftrightharpoons',
 			r'\\curvearrowleft', r'\\circlearrowleft', r'\\Lsh', r'\\upuparrows', r'\\rightrightarrows',
-			 r'\\rightleftarrows', r'\\rightarrowtail', r'\\looparrowright',
+			r'\\rightleftarrows', r'\\rightarrowtail', r'\\looparrowright',
 			r'\\curvearrowright', r'\\circlearrowright', r'\\Rsh', r'\\downdownarrows', r'\\leftleftarrows',
-			 r'\\leftrightarrows', r'\\leftarrowtail', r'\\looparrowleft',
+			r'\\leftrightarrows', r'\\leftarrowtail', r'\\looparrowleft',
 			r'\\hookrightarrow', r'\\hookleftarrow', r'\\multimap', r'\\leftrightsquigarrow', r'\\rightsquigarrow',
-			 r'\\twoheadrightarrow', r'\\twoheadleftarrow', r'\\varepsilon', r'\\varepsilon\right',
-			r'\\amalg', r'\\%', r'\\dagger', r'\\ddagger', r'\\ldots', r'\\cdots',
+			r'\\twoheadrightarrow', r'\\twoheadleftarrow', r'\\varepsilon', r'\\varepsilon\right',
+			r'\\amalg', r'\\%', r'\\dagger', r'\\ddagger', r'\\ldots', r'\\cdots', r'\\sum ', r'\\sum',
 			r'\\smile', r'\\frown', r'\\wr', r'\\triangleleft', r'\\triangleright',
 			r'\\diamondsuit', r'\\heartsuit', r'\\clubsuit', r'\\spadesuit', r'\\Game', r'\\flat', r'\\natural',
-			 r'\\sharp',
+			r'\\sharp',
 			r'\\diagup', r'\\diagdown', r'\\centerdot', r'\\ltimes', r'\\rtimes', r'\\leftthreetimes',
 			r'\\rightthreetimes',
 			r'\\eqcirc', r'\\circeq', r'\\triangleq', r'\\bumpeq', r'\\Bumpeq', r'\\risingdotseq',
@@ -196,10 +196,10 @@ tokenstr = [
 			r'\\vartriangleleft', r'\\ntriangleleft', r'\\vartriangleright', r'\\ntriangleright', r'\\right', r'\\left',
 			r'\\trianglelefteq', r'\\ntrianglelefteq', r'\\trianglerighteq', r'\\ntrianglerighteq',
 			r'\\overleftarrow', r'\\overrightarrow', r'\\overleftrightarrow',
-			 r'\\overbrace',
+			r'\\overbrace',
 			r'\\underbrace', r'\\prod', r'\\coprod',
 			r'\\iiint', r'\\iiiint',  r'\\iint', r'\\oint', r'\\tfrac', r'\\dfrac', r'\\dbinom', r'\\over',
-			r'\\choose', r'\\tbinom', r'\\binom',
+			r'\\choose', r'\\tbinom', r'\\binom', r'\\widetilde',
 			r'\\bigl',
 			r'\\bigr',
 			r'\\mbox', r'\\rightarrow', r'\\Rightarrow',
@@ -209,7 +209,7 @@ tokenstr = [
 
 			r'\\alpha ', r'\\qquad ', r'\\beta ', r'\\quad ', r'\\quad', r'\\;', r'\\,', r'\\!',
 			r'\\gamma ', r'\\Gamma ', r'\\langle ', r'\\langle', r'\\rangle ', r'\\rangle',
-			r'\\Alpha ', r'\\Beta ', r'\\Alpha ', r'\\Beta ',
+			r'\\Alpha ', r'\\Beta ',
 			r'\\delta ', r'\\epsilon ', r'\\zeta ', r'\\nu ', r'\\xi ', r'\\omicron ', r'\\pi ', r'\\rho ',
 			r'\\sigma ', r'\\eta ', r'\\theta ', r'\\iota ', r'\\kappa ', r'\\lambda ', r'\\mu ', r'\\tau ',
 			r'\\upsilon ', r'\\phi ', r'\\chi ', r'\\psi ', r'\\omega ',
@@ -223,7 +223,7 @@ tokenstr = [
 			r'\\upsilon', r'\\phi', r'\\chi', r'\\psi', r'\\omega',
 			r'\\Delta', r'\\Epsilon', r'\\Zeta', r'\\Nu', r'\\Xi', r'\\Omicron', r'\\Pi', r'\\Rho',
 			r'\\Sigma', r'\\Eta', r'\\Theta', r'\\Iota', r'\\Kappa', r'\\Lambda', r'\\Mu', r'\\Tau',
-			r'\\Upsilon', r'\\Phi', r'\\Chi', r'\\Psi', r'\\Omega', r'=', r'\:', r'\,', r'\.',
+			r'\\Upsilon', r'\\Phi', r'\\Chi', r'\\Psi', r'\\Omega', r'=', r'\:', r'\,', r'\.', r'\;',
 
 			r'0', r'1', r'2', r'3', r'4', r'5', r'6', r'7', r'8', r'9',
 			r'a', r'b', r'c', r'd', r'e', r'f', r'g', r'h', r'i', r'j', r'k',
@@ -232,57 +232,8 @@ tokenstr = [
 			r'H', r'I', r'J', r'K', r'L', r'M', r'N', r'O', r'P', r'Q', r'R',
 			r'S', r'T', r'U', r'V', r'W', r'X', r'Y', r'Z',
 
-			r'\(', r'\)', r'\[', r'\]', r'{', r'}', r'!', r'\\#',  r'\\&', r'\\', r'\~'
-			 ]
-
-tokenstr.sort(key=lambda i: len(i), reverse=True)
-token2str = {0: '<f>', 1: '</f>', 2: '<pad>', 3: '<unk>'}
-str2token = {'<f>': 0, '</f>': 1, '<pad>': 2, '<unk>': 3}
-i = 4
-for str in tokenstr:
-	if str in str2token:
-		print(str)
-	else:
-		str2token[str] = i
-		token2str[i] = str
-		i+=1
-str_length = i
-print(str_length)
-
-
-def match_formula(formula):
-	print(formula)
-
-	matched_formula = []
-	matched_index = []
-	for i in range(4, str_length):
-		str = token2str[i]
-		res = re.finditer(str, formula)
-		res_inds = [m.span() for m in res]
-		if len(res_inds) > 0:
-			for res_ind in res_inds:
-				if res_ind[0] not in matched_index:
-					# print(str, i)
-					matched_formula.append([res_ind[0], i])
-					for idx in range(res_ind[0], res_ind[1]):
-						matched_index.append(idx)
-
-	matched_formula = np.array(matched_formula)
-	matched_formula = matched_formula[np.argsort(matched_formula[:, 0])]
-	tokens = list(matched_formula.transpose()[1])
-	post_token_count = 120 - len(tokens)
-	if post_token_count > 0:
-		post_token = [2] * (post_token_count -1)
-		post_token.append(1)
-	tokens = [0,] + tokens + post_token
-	res_formula = ''
-	for mat_idx in matched_formula:
-		str = token2str[mat_idx[1]] + ' '
-		if str.startswith(r'\\') or str.startswith('\\'):
-			str = str[1:-1]
-		res_formula += str
-	print(res_formula)
-	print(tokens)
+			r'\(', r'\)', r'\[', r'\]', r'{', r'}', r'!', r'\\#',  r'\\&', r'\\', r'\~',
+			]
 
 
 

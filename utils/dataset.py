@@ -2,11 +2,10 @@
 import pandas as pd
 import numpy as np
 import cv2
-import torchvision.transforms as transforms
+
 from torch.utils import data
 import imgaug.augmenters as iaa
 import imgaug as ia
-
 from utils.image_process import ImageProcess
 from utils.label_process import LabelProcess
 from config import Config
@@ -25,7 +24,6 @@ class LatexDataset(data.Dataset):
         self.label_paths = self.data_paths["label"].values[1:]
         with open(cfg.FORMULAS_DIR, 'r', encoding="latin_1") as f:
             self.formulas_lines = f.readlines()
-        self.transformer = transforms.Compose([transforms.ToTensor()])
         self.image_processor = ImageProcess()
         self.label_processor = LabelProcess()
 
@@ -37,9 +35,8 @@ class LatexDataset(data.Dataset):
         formula_index = self.label_paths[index]
         formula = self.formulas_lines[int(formula_index)]
         image = self.image_processor.crop_image(image)
-        formula_tensor = self.label_processor.formulas2tensor(formula)
-
-        return image, formula
+        tokens = self.label_processor.formula2tokens(formula)
+        return image, tokens
 
 
 

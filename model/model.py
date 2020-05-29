@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import math
+import numpy as np
 
 from model.resnet import res_34
 from config import Config
@@ -72,33 +72,22 @@ class LatexNet(nn.Module):
         self.encoder = Encoder()  #
         self.decoder = Decoder()  #
 
-        self.formulas = ["" for i in range(cfg.BATCH_SIZE)]
-        self.logits = []
-        self.predicts = []
-
     def forward(self, x):
+        predicts = []
         features = self.backbone(x)
         feature = self.merger(features)
         seq_features, (ehn, ecn) = self.encoder(feature)
 
         token_start = torch.tensor([0 for i in range(cfg.BATCH_SIZE)])
-        token_vector = torch.nn.functional.one_hot(token_start, cfg.INPUT_SIZE_DECODER)
-        # for i in range(0, cfg.BATCH_SIZE):
-        #     token_numpy = token_start.cpu().numpy()
-        #     self.formulas[i] += token_numpy[i]
-        #     # formulas[i] += vocab.idx2token[token_numpy[i]]
+        token_vector = torch.nn.functional.one_hot(token_start, cfg.TOKEN_COUNT)
         (dhn, dcn) = (ehn, ecn)
-        for t in range(1, cfg.SEQUENCE_NUM):
+        for t in range(1, cfg.MAX_FORMULA_LENGTH):
             predict, (dhn, dcn) = self.decoder(token_vector, dhn, dcn)
-            self.logits.append(predict)
             next_token = predict.argmax(dim=1)
-            self.predicts.append(next_token)
-            # for i in range(0, cfg.BATCH_SIZE):
-            #     token_numpy = next_token.cpu().numpy()
-            #     self.formulas[i] += (str(token_numpy[i]) + " ")
-            token_vector = torch.nn.functional.one_hot(next_token, cfg.INPUT_SIZE_DECODER)
-
-        return self.predicts
+            predicts.append(next_token)
+            token_vector = torch.nn.functional.one_hot(next_token, cfg.TOKEN_COUNT)
+        predicts_numpy = np.array([token.cpu().numpy() for token in predicts]).transpose()
+        return predicts_numpy
 
 
 class Encoder(nn.Module):
@@ -126,8 +115,8 @@ class Encoder(nn.Module):
 class Decoder(nn.Module):
     def __init__(self):
         super(Decoder, self).__init__()
-        self.lstm = nn.LSTM(cfg.INPUT_SIZE_DECODER, cfg.HIDDEN_SIZE_DECODER, batch_first=True)
-        self.out = nn.Linear(cfg.HIDDEN_SIZE_DECODER, cfg.OUTPUT_SIZE_DECODER, bias=False)
+        self.lstm = nn.LSTM(cfg.TOKEN_COUNT, cfg.HIDDEN_SIZE_DECODER, batch_first=True)
+        self.out = nn.Linear(cfg.HIDDEN_SIZE_DECODER, cfg.TOKEN_COUNT, bias=False)
 
     def forward(self, token_vector, dhn, dcn):
         # token_vector: [batch_size, input_size] -> [batch_size, 1, input_size]
