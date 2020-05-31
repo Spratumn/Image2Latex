@@ -54,24 +54,26 @@ def train():
 def model_test():
 	latnet = create_model()
 	img = torch.rand(cfg.BATCH_SIZE, 3, 512, 1600)
-	pred = latnet(img)
-	print(pred)
+	logits, pred = latnet(img)
+	print(logits.size())
 
 
 def dataset_test():
 	datst = LatexDataset()
 	img, tokens = datst.__getitem__(4341)
-	plt.imshow(img)
-	plt.show()
 	print(tokens)
-	print(len(tokens))
-
-
+	print(tokens.size())
 
 
 if __name__ == '__main__':
-	model_test()
-	# datst = LatexDataset()
-	# img, formula = datst.__getitem__(2982)
-	# plt.imshow(img)
-	# plt.show()
+	datst = LatexDataset()
+	img, tokens = datst.__getitem__(2982)
+	img = img.unsqueeze(0)
+	latnet = create_model()
+	logits, pred = latnet(img)
+	pos_logits = torch.gather(logits[0], dim=1, index=tokens)
+	loss = -1 * torch.log(pos_logits)
+	print(loss.sum())
+
+
+

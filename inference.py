@@ -24,7 +24,8 @@ class LatexRec:
 		image = cv2.imread(image_path)
 		image = self.image_processor.crop_image(image)
 		image = image.unsqueeze(0)
-		tokens = self.model(image)[0]
+		logits, tokens = self.model(image)
+		tokens = tokens.cpu().numpy()[0]
 		formula = self.label_processor.tokens2formula(tokens)
 		return formula
 

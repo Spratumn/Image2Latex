@@ -73,6 +73,7 @@ class LatexNet(nn.Module):
         self.decoder = Decoder()  #
 
     def forward(self, x):
+        logits = []
         predicts = []
         features = self.backbone(x)
         feature = self.merger(features)
@@ -81,13 +82,16 @@ class LatexNet(nn.Module):
         token_start = torch.tensor([0 for i in range(cfg.BATCH_SIZE)])
         token_vector = torch.nn.functional.one_hot(token_start, cfg.TOKEN_COUNT)
         (dhn, dcn) = (ehn, ecn)
-        for t in range(1, cfg.MAX_FORMULA_LENGTH):
+        for t in range(0, cfg.MAX_FORMULA_LENGTH):
             predict, (dhn, dcn) = self.decoder(token_vector, dhn, dcn)
+            logits.append(predict)
             next_token = predict.argmax(dim=1)
             predicts.append(next_token)
             token_vector = torch.nn.functional.one_hot(next_token, cfg.TOKEN_COUNT)
-        predicts_numpy = np.array([token.cpu().numpy() for token in predicts]).transpose()
-        return predicts_numpy
+
+        logits = torch.stack(logits, dim=1)
+        predicts = torch.stack(predicts, dim=1)
+        return logits, predicts
 
 
 class Encoder(nn.Module):
@@ -125,7 +129,8 @@ class Decoder(nn.Module):
         output_vector, (dhn, dcn) = self.lstm(input_vector, (dhn, dcn))
         output_vector = output_vector.squeeze(1)
         # [batch_size, hidden_size] -> [batch_size, output_size]
-        output = self.out(output_vector)
+        output = torch.tanh(output_vector)
+        output = F.softmax(self.out(output), dim=1)
         return output, (dhn, dcn)
 
 

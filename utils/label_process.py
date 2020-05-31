@@ -21,22 +21,6 @@ class LabelProcess:
 		self.token2str = {0: '<f>', 1: '</f>', 2: '<pad>', 3: '<unk>'}
 		self.get_token_str_dict()
 
-	def formulas2tensor(self, formulas):
-		"""
-		input: formulas，若干个公式字符串
-		output: tensor，若谷个公式对应得序号列表
-		"""
-
-		return
-
-	def tensor2formula(self, tensor, pretty=False, tags=True):
-		"""
-		input: tensor，若谷个公式对应得序号列表
-		output: formulas，若干个公式字符串
-
-		"""
-		return
-
 	def get_token_str_dict(self):
 		i = 4
 		for str in self.tokenlist:
@@ -72,11 +56,12 @@ class LabelProcess:
 			tokens = tokens + post_token
 		else:
 			tokens = tokens[:cfg.MAX_FORMULA_LENGTH]
+		tokens = np.array(tokens)
+		tokens = torch.LongTensor(tokens.reshape(512, 1))
 		return tokens
 
 	def tokens2formula(self, tokens):
 		formula = ''
-		print(tokens)
 		for token in tokens:
 			str = self.token2str[token] + ' '
 			if str.startswith(r'\\') or str.startswith('\\'):
@@ -87,4 +72,3 @@ class LabelProcess:
 
 if __name__ == '__main__':
 	label_p = LabelProcess()
-	print(label_p.token_nums)

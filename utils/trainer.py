@@ -40,22 +40,19 @@ class Trainer:
 
         data_process = tqdm(data_loader)
         for batch_item in data_process:
-            batch_img, batch_formulas = batch_item
+            batch_img, batch_tokens = batch_item
             batch_img = batch_img.to(device=cfg.DEVICE)
-            batch_formulas = batch_formulas.to(device=cfg.DEVICE)
 
-            batch_predict = self.model(batch_img)
-            loss, loss_stats = self.loss(batch_formulas, batch_formulas)
+            batch_logits, batch_predict = self.model(batch_img)
+            batch_loss = self.loss(batch_logits, batch_tokens)
             if phase == 'train':
                 self.optimizer.zero_grad()
-                loss.backward()
+                batch_loss.backward()
                 self.optimizer.step()
-            batch_loss = [loss_stats['total_loss']]
-
-            epoch_total_loss += batch_loss[0]
+            epoch_total_loss += batch_loss
 
             loss_str = "total_loss: {}"\
-                .format(batch_loss[0])
+                .format(batch_loss)
 
             data_process.set_description_str("epoch:{}".format(epoch))
             data_process.set_postfix_str(loss_str)
